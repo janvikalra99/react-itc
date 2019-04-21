@@ -1,6 +1,6 @@
 import React from 'react';
 import { List } from 'immutable';
-import Bar from './components/bar';
+import Bar from './bar';
 
 
 export default class Options extends React.Component {
@@ -13,9 +13,9 @@ export default class Options extends React.Component {
 
 
   makeNew = () => {
-    this.setState({
-      bars: this.state.bars.push(<Bar makeNew={this.makeNew} />),
-    });
+    this.setState(prevState => ({
+      bars: prevState.bars.push(<Bar makeNew={this.makeNew} />),
+    }));
   }
 
   render() {

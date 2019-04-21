@@ -1,7 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
+import Options from './components/options';
 import './style.scss';
 
-const App = () => <div className="test">All the REACT are belong to us!</div>;
 
-ReactDOM.render(<App />, document.getElementById('main'));
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {}; // nothing here yet
+  }
+
+  render() {
+    return (
+      <Options />
+    );
+  }
+}

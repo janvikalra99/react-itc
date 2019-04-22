@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
-import Options from './components/options';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import './style.scss';
+import Options from './components/options';
+// import Bar from './components/bar';
 
 
-export default class App extends Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {}; // nothing here yet
@@ -11,7 +13,11 @@ export default class App extends Component {
 
   render() {
     return (
-      <Options />
+      <div>
+        <Options />
+      </div>
     );
   }
 }
+
+ReactDOM.render(<App />, document.getElementById('main'));

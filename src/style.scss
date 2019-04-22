@@ -1,13 +1,21 @@
-body, html {
-  font-family: "Roboto", sans-serif;
-  background: linear-gradient(to bottom, #ffffff 0%,#53cbf1 40%,#05abe0 100%);
-  height: 100%;
-}
+// body, html {
+//   font-family: "Roboto", sans-serif;
+//   background: linear-gradient(to bottom, #ffffff 0%,#53cbf1 40%,#05abe0 100%);
+//   height: 100%;
+// }
 
-.logo {
-  background-image: url('img/MYIMAGE.jpg');
-  width: 100px;
-  height: 100px;
-  background-repeat: no-repeat;
-  background-size: contain;
+// .logo {
+//   background-image: url('img/MYIMAGE.jpg');
+//   width: 100px;
+//   height: 100px;
+//   background-repeat: no-repeat;
+//   background-size: contain;
+// }
+
+
+// to ensure bar are just lines
+input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #000000;
 }

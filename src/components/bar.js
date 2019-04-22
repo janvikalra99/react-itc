@@ -5,10 +5,16 @@ export default class Bar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: '',
+      text: this.props.initialText,
     };
   }
 
+  componentDidMount() {
+    this.highlightInput.focus();
+  }
+
+  // QUESTION for Tim
+  // ensure latest one is highlighted
   onInputChange = (event) => {
     this.setState({ text: event.target.value });
   }
@@ -24,8 +30,10 @@ export default class Bar extends React.Component {
   render() {
     return (
       <div>
-        <input value={this.state.text} onChange={this.onInputChange} onKeyDown={this.onKeyDown} />
+        <input value={this.state.text} onChange={this.onInputChange} onKeyDown={this.onKeyDown} ref={(input) => { this.highlightInput = input; }} />
       </div>
     );
   }
 }
+
+// PRINTING IN JVSRIPT      console.log(`makenew value:${makeNew}`);

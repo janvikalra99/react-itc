@@ -1,5 +1,5 @@
 import React from 'react';
-import { List } from 'immutable';
+// import { List } from 'immutable';
 import Bar from './bar';
 
 
@@ -7,15 +7,29 @@ export default class Options extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      bars: List.ofBar(Bar),
+      bars: [<Bar makeNew={this.makeNew} id="test" initialText="option1" />,
+        <Bar makeNew={this.makeNew} id="test" initialText="add option" />],
     };
   }
 
+  // makeNew = () => {
+  //   this.setState(prevState => ({
+  //     bars: prevState.bars.push(<Bar makeNew={this.makeNew} />),
+  //   }));
+  // }
+
+  // makeNew = () => {
+  //   this.setState(prevState => ({
+  //     bars: prevState.bars.push(<Bar makeNew={this.makeNew} />),
+  //   }));
+  // }
+
 
   makeNew = () => {
-    this.setState(prevState => ({
-      bars: prevState.bars.push(<Bar makeNew={this.makeNew} />),
-    }));
+    const newArray = this.state.bars; // make sure this text is focused
+    newArray.push(<Bar makeNew={this.makeNew} id="test" handleFocus={this.handleFocus} />);
+    this.setState({ bars: newArray });
+    return <Bar makeNew={this.makeNew} id="test" handleFocus={this.handleFocus} />;
   }
 
   render() {
@@ -26,3 +40,6 @@ export default class Options extends React.Component {
     );
   }
 }
+
+
+// bars: List.ofBar(Bar),

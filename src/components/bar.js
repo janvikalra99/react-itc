@@ -9,12 +9,6 @@ export default class Bar extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.highlightInput.focus();
-  }
-
-  // QUESTION for Tim
-  // ensure latest one is highlighted
   onInputChange = (event) => {
     this.setState({ text: event.target.value });
   }
@@ -27,13 +21,23 @@ export default class Bar extends React.Component {
     }
   }
 
+  handleFocus = event => event.target.select();
+
   render() {
     return (
       <div>
-        <input value={this.state.text} onChange={this.onInputChange} onKeyDown={this.onKeyDown} ref={(input) => { this.highlightInput = input; }} />
+        <input autoFocus value={this.state.text} onChange={this.onInputChange} onKeyDown={this.onKeyDown} onFocus={this.handleFocus} />
       </div>
     );
   }
 }
+
+
+// Focus the right way:
+// componentDidMount() {
+//   this.highlightInput.focus();
+// }
+// ref={(input) => { this.highlightInput = input; }}
+
 
 // PRINTING IN JVSRIPT      console.log(`makenew value:${makeNew}`);

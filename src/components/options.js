@@ -18,19 +18,20 @@ export default class Options extends React.Component {
   //   }));
   // }
 
-  // makeNew = () => {
-  //   this.setState(prevState => ({
-  //     bars: prevState.bars.push(<Bar makeNew={this.makeNew} />),
-  //   }));
-  // }
-
 
   makeNew = () => {
-    const newArray = this.state.bars; // make sure this text is focused
-    newArray.push(<Bar makeNew={this.makeNew} id="test" handleFocus={this.handleFocus} />);
+    const newArray = this.state.bars;
+    newArray.push(<Bar makeNew={this.makeNew} id="test" />);
     this.setState({ bars: newArray });
-    return <Bar makeNew={this.makeNew} id="test" handleFocus={this.handleFocus} />;
   }
+
+
+  // delete = () => {
+  //   console.log('deleted!');
+  //   // const newArray = this.state.bars;
+  //   // newArray.splice(-1, 1);
+  //   // this.setState({ bars: newArray });
+  // }
 
   render() {
     return (

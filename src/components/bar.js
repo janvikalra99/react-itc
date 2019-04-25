@@ -6,6 +6,7 @@ export default class Bar extends React.Component {
     super(props);
     this.state = {
       text: this.props.initialText,
+      id: this.props.id,
     };
   }
 
@@ -21,23 +22,19 @@ export default class Bar extends React.Component {
     }
   }
 
+  handleDelete = () => {
+    this.props.deleteBar(this.state.id);
+  }
+
+
   handleFocus = event => event.target.select();
 
   render() {
     return (
       <div>
-        <input autoFocus value={this.state.text} onChange={this.onInputChange} onKeyDown={this.onKeyDown} onFocus={this.handleFocus} />
+        <input autoFocus type="options" value={this.state.text} onChange={this.onInputChange} onKeyDown={this.onKeyDown} onFocus={this.handleFocus} id={this.state.id} />
+        <button type="button" onClick={this.handleDelete}> delete </button>
       </div>
     );
   }
 }
-
-
-// Focus the right way:
-// componentDidMount() {
-//   this.highlightInput.focus();
-// }
-// ref={(input) => { this.highlightInput = input; }}
-
-
-// PRINTING IN JVSRIPT      console.log(`makenew value:${makeNew}`);

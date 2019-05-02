@@ -16,8 +16,6 @@ export default class QuestionsPage extends React.Component {
       questionMap: new Map(),
       id: 0,
     };
-    this.handleNewQuestion = this.handleNewQuestion.bind(this);
-    this.handleSurveyTitleChange = this.handleSurveyTitleChange.bind(this);
     this.createStaticSurvey = this.createStaticSurvey.bind(this);
   }
 
@@ -63,59 +61,6 @@ export default class QuestionsPage extends React.Component {
     });
   }
 
-  handleSurveyTitleChange() {
-    const title = 'default Title';
-    const surveyData = {
-      title,
-      pages: [
-        { name: 'page1', questions: [] },
-      ],
-    };
-    this.setState({ surveyjs: surveyData });
-  }
-
-  handleNewQuestion() {
-    const newQuestion = {
-      questions: [
-        {
-          type: 'radiogroup',
-          name: 'car',
-          title: 'What car are you driving?',
-          isRequired: true,
-          colCount: 4,
-          choices: [
-            'None',
-            'Ford',
-            'Vauxhall',
-            'Volkswagen',
-            'Nissan',
-            'Audi',
-            'Mercedes-Benz',
-            'BMW',
-            'Peugeot',
-            'Toyota',
-            'Citroen',
-          ],
-        },
-      ],
-    };
-    const surveyData = this.state.surveyjs;
-    // console.log(surveyData);
-
-    surveyData.pages[0].questions.push(newQuestion);
-
-    // console.log(this.state);
-    this.setState(prevState => ({
-      questionMap: prevState.questionMap.set(prevState.id, Object.assign({}, prevState.questionMap, newQuestion)),
-    }));
-    this.setState(prevState => ({ id: prevState.id + 1 }));
-
-    // this.setState(prevState => ({ id: prevState.id + 1 }));
-
-    this.setState(prevState => ({ surveyjs: surveyData }));
-  }
-
-
   createStaticSurvey() {
     const title = 'default Title';
     const surveyData = {
@@ -123,61 +68,31 @@ export default class QuestionsPage extends React.Component {
       pages: [
         {
           name: 'page1',
-          questions: [
-            {
-              type: 'radiogroup',
-              name: 'car',
-              title: 'What car are you driving?',
-              isRequired: true,
-              colCount: 4,
-              choices: [
-                'None',
-                'Ford',
-                'Vauxhall',
-                'Volkswagen',
-                'Nissan',
-              ],
-            },
-          ],
+          questions: [],
         },
       ],
     };
 
-    // const newQuestion = {
-    //   questions: [
-    //     {
-    //       type: 'radiogroup',
-    //       name: 'car',
-    //       title: 'What car are you driving?',
-    //       isRequired: true,
-    //       colCount: 4,
-    //       choices: [
-    //         'None',
-    //         'Ford',
-    //         'Vauxhall',
-    //         'Volkswagen',
-    //         'Nissan',
-    //       ],
-    //     },
-    //   ],
-    // };
+    const newQuestion = {
+      type: 'radiogroup',
+      name: 'car',
+      title: 'What car are you driving?',
+      isRequired: true,
+      colCount: 4,
+      choices: [
+        'None',
+        'Ford',
+        'Vauxhall',
+        'Volkswagen',
+        'Nissan',
+      ],
+    };
 
-    // surveyData.pages[0].questions.push(newQuestion);
+    surveyData.pages[0].questions.push(newQuestion);
 
     console.log(`survey data: ${surveyData}`);
 
     this.setState({ surveyjs: surveyData });
-
-
-    // console.log(this.state);
-    // this.setState(prevState => ({
-    //   questionMap: prevState.questionMap.set(prevState.id, Object.assign({}, prevState.questionMap, newQuestion)),
-    // }));
-    // this.setState(prevState => ({ id: prevState.id + 1 }));
-
-    // this.setState(prevState => ({ id: prevState.id + 1 }));
-
-    // this.setState(prevState => ({ surveyjs: surveyData }));
   }
 
 

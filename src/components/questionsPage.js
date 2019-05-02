@@ -1,9 +1,9 @@
 import React from 'react';
+import { Map } from 'immutable';
 import '../style.scss';
 import * as Survey from 'survey-react';
 import Question from './question';
 import 'survey-react/survey.css';
-
 
 export default class QuestionsPage extends React.Component {
   constructor(props) {
@@ -13,7 +13,17 @@ export default class QuestionsPage extends React.Component {
       questions: [1],
       inPreview: false,
       surveyjs: null,
+      questionMap: new Map(),
+      id: 0,
     };
+    this.handleNewQuestion = this.handleNewQuestion.bind(this);
+    this.handleSurveyTitleChange = this.handleSurveyTitleChange.bind(this);
+    this.createStaticSurvey = this.createStaticSurvey.bind(this);
+  }
+
+  onComplete = (survey, options) => {
+  // Write survey results into database
+    console.log(`Survey results: ${JSON.stringify(survey.data)}`);
   }
 
   deleteQuestion = (id) => {
@@ -53,6 +63,124 @@ export default class QuestionsPage extends React.Component {
     });
   }
 
+  handleSurveyTitleChange() {
+    const title = 'default Title';
+    const surveyData = {
+      title,
+      pages: [
+        { name: 'page1', questions: [] },
+      ],
+    };
+    this.setState({ surveyjs: surveyData });
+  }
+
+  handleNewQuestion() {
+    const newQuestion = {
+      questions: [
+        {
+          type: 'radiogroup',
+          name: 'car',
+          title: 'What car are you driving?',
+          isRequired: true,
+          colCount: 4,
+          choices: [
+            'None',
+            'Ford',
+            'Vauxhall',
+            'Volkswagen',
+            'Nissan',
+            'Audi',
+            'Mercedes-Benz',
+            'BMW',
+            'Peugeot',
+            'Toyota',
+            'Citroen',
+          ],
+        },
+      ],
+    };
+    const surveyData = this.state.surveyjs;
+    // console.log(surveyData);
+
+    surveyData.pages[0].questions.push(newQuestion);
+
+    // console.log(this.state);
+    this.setState(prevState => ({
+      questionMap: prevState.questionMap.set(prevState.id, Object.assign({}, prevState.questionMap, newQuestion)),
+    }));
+    this.setState(prevState => ({ id: prevState.id + 1 }));
+
+    // this.setState(prevState => ({ id: prevState.id + 1 }));
+
+    this.setState(prevState => ({ surveyjs: surveyData }));
+  }
+
+
+  createStaticSurvey() {
+    const title = 'default Title';
+    const surveyData = {
+      title,
+      pages: [
+        {
+          name: 'page1',
+          questions: [
+            {
+              type: 'radiogroup',
+              name: 'car',
+              title: 'What car are you driving?',
+              isRequired: true,
+              colCount: 4,
+              choices: [
+                'None',
+                'Ford',
+                'Vauxhall',
+                'Volkswagen',
+                'Nissan',
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    // const newQuestion = {
+    //   questions: [
+    //     {
+    //       type: 'radiogroup',
+    //       name: 'car',
+    //       title: 'What car are you driving?',
+    //       isRequired: true,
+    //       colCount: 4,
+    //       choices: [
+    //         'None',
+    //         'Ford',
+    //         'Vauxhall',
+    //         'Volkswagen',
+    //         'Nissan',
+    //       ],
+    //     },
+    //   ],
+    // };
+
+    // surveyData.pages[0].questions.push(newQuestion);
+
+    console.log(`survey data: ${surveyData}`);
+
+    this.setState({ surveyjs: surveyData });
+
+
+    // console.log(this.state);
+    // this.setState(prevState => ({
+    //   questionMap: prevState.questionMap.set(prevState.id, Object.assign({}, prevState.questionMap, newQuestion)),
+    // }));
+    // this.setState(prevState => ({ id: prevState.id + 1 }));
+
+    // this.setState(prevState => ({ id: prevState.id + 1 }));
+
+    // this.setState(prevState => ({ surveyjs: surveyData }));
+  }
+
+
   render() {
     if (this.state.inPreview) {
       return (
@@ -60,7 +188,7 @@ export default class QuestionsPage extends React.Component {
           <script src="https://surveyjs.azureedge.net/1.0.79/survey.react.min.js" />
           <link href="https://surveyjs.azureedge.net/1.0.79/survey.css" type="text/css" rel="stylesheet" />
           <button type="button" onClick={this.endPreview}> End Preview </button>
-          <Survey.Survey json={this.state.surveyjs} />
+          <Survey.Survey json={this.state.surveyjs} onComplete={this.onComplete} />
         </div>
       );
     }
@@ -69,6 +197,7 @@ export default class QuestionsPage extends React.Component {
         {this.state.questions.map(x => (<Question id={x} addQuestion={this.addQuestion} deleteQuestion={this.deleteQuestion} key={x} />))}
         <button type="button" onClick={this.addQuestion}> Add Question </button>
         <button type="button" onClick={this.startPreview}> Start Preview </button>
+        <button type="button" onClick={this.createStaticSurvey}> Add JSON </button>
       </div>
     );
   }

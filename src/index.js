@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import QuestionsPage from './components/questionsPage';
+// import Dashboard from './components/dashboard';
 
 
 class App extends React.Component {

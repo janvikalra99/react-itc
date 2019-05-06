@@ -1,4 +1,5 @@
 import React from 'react';
+import { Map } from 'immutable';
 import '../style.scss';
 import * as Survey from 'survey-react';
 import Question from './question';
@@ -8,6 +9,7 @@ export default class QuestionsPage extends React.Component {
   constructor(props) {
     super(props);
     // create a question object
+
     const questionType = {
       type: 'multiplechoice',
       name: 'id',
@@ -18,16 +20,20 @@ export default class QuestionsPage extends React.Component {
         'choice2',
       ],
     };
-
     this.state = {
       id: 1,
-      // questions: [1],
       inPreview: false,
       surveyjs: null,
-      questionMap: new Map([[0, 'firstQuestion']]),
+      questionMap: Map(),
     };
     this.createStaticSurvey = this.createStaticSurvey.bind(this);
-    this.generateQuestion = this.generateQuestion.bind(this);
+    // this.generateQuestion = this.generateQuestion.bind(this);
+  }
+
+  componentWillMount() {
+    this.setState(prevState => ({
+      questionMap: prevState.questionMap.set('firstKey', 'firstItem'),
+    }));
   }
 
   onComplete = (survey, options) => {
@@ -50,51 +56,25 @@ export default class QuestionsPage extends React.Component {
   deleteQuestion = (id) => {
     /* delete item from map */
     this.setState(prevState => ({
-      questionMap: prevState.questionMap.delete(id),
+      questionMap: new Map([prevState.questionMap]).delete(id),
+      // questionMap: prevState.questionMap.delete(id),
     }));
-
-
-    // // find want index value the ID is at
-    // let index = 0;
-    // while (this.state.questions[index] !== id) {
-    //   index += 1;
-    // }
-    // // make a separate copy of the array
-    // const array = [...this.state.questions];
-    // // delete that element from the list using it's index location
-    // if (array.length > 1) {
-    //   array.splice(index, 1);
-    // }
-    // this.setState({ questions: array });
   }
 
   addQuestion = () => {
     // increment the id
+
+    // console.log(`original map: ${this.state.questionMap}`);
     this.setState(prevState => ({ id: prevState.id + 1 }));
 
     // add new object to the Map
     this.setState(prevState => ({
-      questionMap: new Map(prevState.questionMap).set(5, 'newQuestion'), // LEARNING
-    }));
-
-    console.log(`Map: ${this.state.questionMap}`);
-
-    // this.setState((prevState) => {
-    //   const array = prevState.questions;
-    //   array.push(prevState.id);
-    //   return { questions: array };
-    // });
-  }
-
-    /* update the questions list */
-    const newQuestion = this.questionType;
-    this.setState(prevState => ({
-      questionMap: prevState.questionMap.set(prevState.id, newQuestion),
+      questionMap: prevState.questionMap.set(prevState.id, 'newState'),
     }));
   }
 
 
-  publishSurvey() {
+  createStaticSurvey() {
     const surveyData = {
       title: 'Default Title',
       pages: [
@@ -104,61 +84,24 @@ export default class QuestionsPage extends React.Component {
         },
       ],
     };
-    const
+
+    const newQuestion = {
+      type: 'radiogroup',
+      name: 'car',
+      title: 'What car are you driving?',
+      isRequired: true,
+      colCount: 4,
+      choices: [
+        'None',
+        'Ford',
+        'Vauxhall',
+        'Volkswagen',
+        'Nissan',
+      ],
+    };
+
     surveyData.pages[0].questions.push(newQuestion);
-
-    // console.log(`survey data: ${surveyData}`);
-
     this.setState({ surveyjs: surveyData });
-
-
-    // const newQuestion = {
-    //   type: 'radiogroup',
-    //   name: 'car',
-    //   title: 'What car are you driving?',
-    //   isRequired: true,
-    //   colCount: 4,
-    //   choices: [
-    //     'None',
-    //     'Ford',
-    //     'Vauxhall',
-    //     'Volkswagen',
-    //     'Nissan',
-    //   ],
-    // };
-
-
-    // const title = 'default Title';
-    // const surveyData = {
-    //   title,
-    //   pages: [
-    //     {
-    //       name: 'page1',
-    //       questions: [],
-    //     },
-    //   ],
-    // };
-    //
-    // const newQuestion = {
-    //   type: 'radiogroup',
-    //   name: 'car',
-    //   title: 'What car are you driving?',
-    //   isRequired: true,
-    //   colCount: 4,
-    //   choices: [
-    //     'None',
-    //     'Ford',
-    //     'Vauxhall',
-    //     'Volkswagen',
-    //     'Nissan',
-    //   ],
-    // };
-    //
-    // surveyData.pages[0].questions.push(newQuestion);
-    //
-    // console.log(`survey data: ${surveyData}`);
-    //
-    // this.setState({ surveyjs: surveyData });
   }
 
   generateQuestion(value, key) {
@@ -179,6 +122,7 @@ export default class QuestionsPage extends React.Component {
     }
     return (
       <div>
+        {console.log(`original map value: ${this.state.questionMap}`)}
         <button type="button" onClick={this.addQuestion}> Add Question </button>
         <button type="button" onClick={this.startPreview}> Start Preview </button>
         <button type="button" onClick={this.createStaticSurvey}> Add JSON </button>

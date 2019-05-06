@@ -6487,6 +6487,11 @@ surge@^0.20.3:
     tarr "1.0.3"
     url-parse-as-address "1.0.0"
 
+survey-react@^1.0.83:
+  version "1.0.83"
+  resolved "https://registry.yarnpkg.com/survey-react/-/survey-react-1.0.83.tgz#edc816845eab82ecbacf8808b38261c047b7f0f0"
+  integrity sha512-SQNM/cUH2R4qwlsNlPTjH8UrEkYRFrkzVLSVpP6m6p/vK32YfgGlPUElk02STUvdeBJnfZkG2VX5NQga4/qYUA==
+
 table@^5.2.3:
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/table/-/table-5.2.3.tgz#cde0cc6eb06751c009efab27e8c820ca5b67b7f2"

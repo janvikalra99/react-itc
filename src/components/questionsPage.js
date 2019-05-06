@@ -20,14 +20,14 @@ export default class QuestionsPage extends React.Component {
     };
 
     this.state = {
-      questions: [1],
+      id: 1,
+      // questions: [1],
       inPreview: false,
       surveyjs: null,
-      questionType,
-      questionMap: new Map([[1, questionType]]),
-      id: 1,
+      questionMap: new Map([[0, 'firstQuestion']]),
     };
-    this.publishSurvey = this.publishSurvey.bind(this);
+    this.createStaticSurvey = this.createStaticSurvey.bind(this);
+    this.generateQuestion = this.generateQuestion.bind(this);
   }
 
   onComplete = (survey, options) => {
@@ -48,36 +48,43 @@ export default class QuestionsPage extends React.Component {
   }
 
   deleteQuestion = (id) => {
-    /* update the questions list */
-    // find want index value the ID is at
-    let index = 0;
-    while (this.state.questions[index] !== id) {
-      index += 1;
-    }
-    // make a separate copy of the array
-    const array = [...this.state.questions];
-    // delete that element from the list using it's index location
-    if (array.length > 1) {
-      array.splice(index, 1);
-    }
-    this.setState({ questions: array });
-
-    /* update the questions Map */
+    /* delete item from map */
     this.setState(prevState => ({
       questionMap: prevState.questionMap.delete(id),
     }));
+
+
+    // // find want index value the ID is at
+    // let index = 0;
+    // while (this.state.questions[index] !== id) {
+    //   index += 1;
+    // }
+    // // make a separate copy of the array
+    // const array = [...this.state.questions];
+    // // delete that element from the list using it's index location
+    // if (array.length > 1) {
+    //   array.splice(index, 1);
+    // }
+    // this.setState({ questions: array });
   }
 
   addQuestion = () => {
-    // increment ID
+    // increment the id
     this.setState(prevState => ({ id: prevState.id + 1 }));
 
-    /* update the questions list */
-    this.setState((prevState) => {
-      const array = prevState.questions;
-      array.push(prevState.id);
-      return { questions: array };
-    });
+    // add new object to the Map
+    this.setState(prevState => ({
+      questionMap: new Map(prevState.questionMap).set(5, 'newQuestion'), // LEARNING
+    }));
+
+    console.log(`Map: ${this.state.questionMap}`);
+
+    // this.setState((prevState) => {
+    //   const array = prevState.questions;
+    //   array.push(prevState.id);
+    //   return { questions: array };
+    // });
+  }
 
     /* update the questions list */
     const newQuestion = this.questionType;
@@ -100,7 +107,7 @@ export default class QuestionsPage extends React.Component {
     const
     surveyData.pages[0].questions.push(newQuestion);
 
-    console.log(`survey data: ${surveyData}`);
+    // console.log(`survey data: ${surveyData}`);
 
     this.setState({ surveyjs: surveyData });
 
@@ -154,6 +161,10 @@ export default class QuestionsPage extends React.Component {
     // this.setState({ surveyjs: surveyData });
   }
 
+  generateQuestion(value, key) {
+    return <Question id={key} addQuestion={this.addQuestion} deleteQuestion={this.deleteQuestion} key={key} />;
+  }
+
 
   render() {
     if (this.state.inPreview) {
@@ -168,7 +179,6 @@ export default class QuestionsPage extends React.Component {
     }
     return (
       <div>
-        {this.state.questions.map(x => (<Question id={x} addQuestion={this.addQuestion} deleteQuestion={this.deleteQuestion} key={x} />))}
         <button type="button" onClick={this.addQuestion}> Add Question </button>
         <button type="button" onClick={this.startPreview}> Start Preview </button>
         <button type="button" onClick={this.createStaticSurvey}> Add JSON </button>
@@ -177,5 +187,9 @@ export default class QuestionsPage extends React.Component {
   }
 }
 
+// {this.state.questionMap.forEach(this.generateQuestion)}
+
+
+// {this.state.questions.map(x => (<Question id={x} addQuestion={this.addQuestion} deleteQuestion={this.deleteQuestion} key={x} />))}
 
 // <button type="button" onClick={this.handleClick}>delete</button>

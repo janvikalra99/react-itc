@@ -1,5 +1,6 @@
 - when dealing with maps, use immutable, not regular maps.
-  if using regular maps, to update use: questionMap: new Map([prevState.questionMap]).set(6, 'new state'), 
+  if using regular maps, to update use: questionMap: new Map([prevState.questionMap]).set(6, 'new state'),
+  - this.state.questionMap.get(0)
 
 1. a component can be written inside another component itself. do this for small components
   ```

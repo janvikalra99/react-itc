@@ -9,31 +9,45 @@ export default class QuestionsPage extends React.Component {
   constructor(props) {
     super(props);
     // create a question object
-
-    const questionType = {
-      type: 'multiplechoice',
+    const newQuestion = {
+      type: 'checkbox',
       name: 'id',
       title: 'questionTitle',
       isRequired: true,
+      colCount: 4,
       choices: [
         'choice1',
         'choice2',
       ],
     };
+    // set State
     this.state = {
       id: 1,
       inPreview: false,
       surveyjs: null,
       questionMap: Map(),
+      questionType: newQuestion,
     };
-    this.createStaticSurvey = this.createStaticSurvey.bind(this);
+    // this.createStaticSurvey = this.createStaticSurvey.bind(this);
     // this.generateQuestion = this.generateQuestion.bind(this);
   }
 
   componentWillMount() {
+    // add one item to the quesitonMap
     this.setState(prevState => ({
-      questionMap: prevState.questionMap.set('firstKey', 'firstItem'),
+      questionMap: prevState.questionMap.set(0, prevState.questionType),
     }));
+    // create Survey Title
+    const surveyData = {
+      title: 'Default Title',
+      pages: [
+        {
+          name: 'page1',
+          questions: [],
+        },
+      ],
+    };
+    this.setState({ surveyjs: surveyData });
   }
 
   onComplete = (survey, options) => {
@@ -42,6 +56,13 @@ export default class QuestionsPage extends React.Component {
   }
 
   startPreview = () => {
+    // update surveyjs with
+    const surveyData = this.state.surveyjs;
+    const newQuestion = this.state.questionMap.get(0);
+
+    surveyData.pages[0].questions.push(newQuestion);
+    this.setState({ surveyjs: surveyData });
+
     this.setState({
       inPreview: true,
     });
@@ -63,46 +84,21 @@ export default class QuestionsPage extends React.Component {
 
   addQuestion = () => {
     // increment the id
-
-    // console.log(`original map: ${this.state.questionMap}`);
     this.setState(prevState => ({ id: prevState.id + 1 }));
 
     // add new object to the Map
     this.setState(prevState => ({
-      questionMap: prevState.questionMap.set(prevState.id, 'newState'),
+      questionMap: prevState.questionMap.set(prevState.id, prevState.questionType),
     }));
   }
 
-
-  createStaticSurvey() {
-    const surveyData = {
-      title: 'Default Title',
-      pages: [
-        {
-          name: 'page1',
-          questions: [],
-        },
-      ],
-    };
-
-    const newQuestion = {
-      type: 'radiogroup',
-      name: 'car',
-      title: 'What car are you driving?',
-      isRequired: true,
-      colCount: 4,
-      choices: [
-        'None',
-        'Ford',
-        'Vauxhall',
-        'Volkswagen',
-        'Nissan',
-      ],
-    };
-
-    surveyData.pages[0].questions.push(newQuestion);
-    this.setState({ surveyjs: surveyData });
-  }
+  // createStaticSurvey() {
+  //   const surveyData = this.state.surveyjs;
+  //   const newQuestion = this.state.questionMap.get(0);
+  //
+  //   surveyData.pages[0].questions.push(newQuestion);
+  //   this.setState({ surveyjs: surveyData });
+  // }
 
   generateQuestion(value, key) {
     return <Question id={key} addQuestion={this.addQuestion} deleteQuestion={this.deleteQuestion} key={key} />;
@@ -125,7 +121,6 @@ export default class QuestionsPage extends React.Component {
         {console.log(`original map value: ${this.state.questionMap}`)}
         <button type="button" onClick={this.addQuestion}> Add Question </button>
         <button type="button" onClick={this.startPreview}> Start Preview </button>
-        <button type="button" onClick={this.createStaticSurvey}> Add JSON </button>
       </div>
     );
   }

@@ -35,7 +35,7 @@ export default class QuestionsPage extends React.Component {
   componentWillMount() {
     // add one item to the quesitonMap
     this.setState(prevState => ({
-      questionMap: prevState.questionMap.set(0, prevState.questionType),
+      questionMap: prevState.questionMap.set(prevState.id, prevState.questionType),
     }));
     // create Survey Title
     const surveyData = {
@@ -56,11 +56,24 @@ export default class QuestionsPage extends React.Component {
   }
 
   startPreview = () => {
-    // update surveyjs with
-    const surveyData = this.state.surveyjs;
-    const newQuestion = this.state.questionMap.get(0);
-
-    surveyData.pages[0].questions.push(newQuestion);
+    // surveyData blank slate
+    const surveyData = {
+      title: 'Default Title',
+      pages: [
+        {
+          name: 'page1',
+          questions: [],
+        },
+      ],
+    };
+    // put questionMap objects into surveyData
+    let i,
+      newQuestion;
+    for (i = 1; i <= this.state.id; i += 1) {
+      newQuestion = this.state.questionMap.get(i);
+      surveyData.pages[0].questions.push(newQuestion);
+    }
+    // update surveyjs
     this.setState({ surveyjs: surveyData });
 
     this.setState({

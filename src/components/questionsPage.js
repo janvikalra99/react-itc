@@ -22,21 +22,21 @@ export default class QuestionsPage extends React.Component {
     };
     // set State
     this.state = {
-      id: 1,
+      id: 2,
       inPreview: false,
       surveyjs: null,
       questionMap: Map(),
       questionType: newQuestion,
     };
-    // this.createStaticSurvey = this.createStaticSurvey.bind(this);
-    // this.generateQuestion = this.generateQuestion.bind(this);
   }
 
+  // initial set up of state variables
   componentWillMount() {
-    // add one item to the quesitonMap
+    // add first item
     this.setState(prevState => ({
-      questionMap: prevState.questionMap.set(prevState.id, prevState.questionType),
+      questionMap: prevState.questionMap.set(1, prevState.questionType),
     }));
+
     // create Survey Title
     const surveyData = {
       title: 'Default Title',
@@ -69,9 +69,14 @@ export default class QuestionsPage extends React.Component {
     // put questionMap objects into surveyData
     let i,
       newQuestion;
-    for (i = 1; i <= this.state.id; i += 1) {
+    for (i = 1; i < this.state.id; i += 1) {
+      // LEARNING: 'NULL' is 'undefined' in React
+      console.log(`searching for question: ${i}`);
       newQuestion = this.state.questionMap.get(i);
-      surveyData.pages[0].questions.push(newQuestion);
+      if (newQuestion !== undefined) {
+        surveyData.pages[0].questions.push(newQuestion);
+        console.log(`added question: ${i}`);
+      }
     }
     // update surveyjs
     this.setState({ surveyjs: surveyData });
@@ -89,36 +94,31 @@ export default class QuestionsPage extends React.Component {
 
   deleteQuestion = (id) => {
     /* delete item from map */
-    this.setState(prevState => ({
-      questionMap: new Map([prevState.questionMap]).delete(id),
-      // questionMap: prevState.questionMap.delete(id),
-    }));
+    if (this.state.questionMap.size > 1) {
+      this.setState(prevState => ({
+        questionMap: prevState.questionMap.delete(id),
+      }));
+    }
   }
 
   addQuestion = () => {
-    // increment the id
-    this.setState(prevState => ({ id: prevState.id + 1 }));
+    // lEARNING - doesn't actually change state until complete FUNCTION. So:
+    // 1. console print statements shouldn't be INSIDE function but outside.
+    // 2. if were to split into 2 setState functions, prevstate.ID is still the old ID!
 
-    // add new object to the Map
+    // add new object to the Map & increment the id
     this.setState(prevState => ({
       questionMap: prevState.questionMap.set(prevState.id, prevState.questionType),
+      id: prevState.id + 1,
     }));
-  }
-
-  // createStaticSurvey() {
-  //   const surveyData = this.state.surveyjs;
-  //   const newQuestion = this.state.questionMap.get(0);
-  //
-  //   surveyData.pages[0].questions.push(newQuestion);
-  //   this.setState({ surveyjs: surveyData });
-  // }
-
-  generateQuestion(value, key) {
-    return <Question id={key} addQuestion={this.addQuestion} deleteQuestion={this.deleteQuestion} key={key} />;
   }
 
 
   render() {
+    const questions = this.state.questionMap.entrySeq().map(([key, questionObject]) => {
+      return <Question id={key} deleteQuestion={this.deleteQuestion} key={key} />;
+    });
+
     if (this.state.inPreview) {
       return (
         <div>
@@ -128,14 +128,16 @@ export default class QuestionsPage extends React.Component {
           <Survey.Survey json={this.state.surveyjs} onComplete={this.onComplete} />
         </div>
       );
+    } else {
+      return (
+        <div>
+          {console.log(`map state: ${this.state.questionMap}`)}
+          {questions}
+          <button type="button" onClick={this.addQuestion}> Add Question </button>
+          <button type="button" onClick={this.startPreview}> Start Preview </button>
+        </div>
+      );
     }
-    return (
-      <div>
-        {console.log(`original map value: ${this.state.questionMap}`)}
-        <button type="button" onClick={this.addQuestion}> Add Question </button>
-        <button type="button" onClick={this.startPreview}> Start Preview </button>
-      </div>
-    );
   }
 }
 

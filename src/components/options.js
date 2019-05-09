@@ -8,13 +8,26 @@ export default class Options extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: 3,
+      id: 1,
       choices: Map(),
     };
   }
 
   componentWillMount() {
     // add first item
+    // let i;
+    // for (i = 0, i < this.state.choices.size, i += 1) {
+    //
+    // }
+    // this.state.choices.entrySeq().map(([key, value]) {
+    //   this.setState(prevState => ({
+    //     choices: prevState.initialOptions.set(0, 'option1'),
+    //   }));
+    // });
+
+    // PROBLEM - MOUNTING NEW MAP EVERYTIME. BUT MUST MOUNT ATLEAST 1 ITEM!
+    // HOW TO FIX?
+
     this.setState(prevState => ({
       choices: prevState.choices.set(0, 'option1'),
     }));
@@ -22,7 +35,7 @@ export default class Options extends React.Component {
       choices: prevState.choices.set(1, 'option2'),
     }));
     this.setState(prevState => ({
-      choices: prevState.choices.set(2, 'add option'),
+      choices: prevState.choices.set(2, 'add options'),
     }));
   }
 
@@ -47,11 +60,10 @@ export default class Options extends React.Component {
       choices: prevState.choices.set(id, string),
     }));
     // create an array of choices
-    // const options = ['these', 'are', 'my', 'options'];
     const options = [];
 
     let i;
-    for (i = 0; i < this.state.id; i += 1) {
+    for (i = 0; i <= this.state.id; i += 1) {
       const val = this.state.choices.get(i);
       if (val !== undefined) {
         options[i] = this.state.choices.get(i);
@@ -61,10 +73,12 @@ export default class Options extends React.Component {
   }
 
   render() {
+    console.log(`${this.state.choices}`);
+
     const options = this.state.choices.entrySeq().map(([key, value]) => {
       return (
         <Bar id={key}
-          initialText="add option"
+          initialText={value}
           makeNew={this.makeNew}
           deleteBar={this.deleteBar}
           updateChoices={this.updateChoices}

@@ -39,7 +39,7 @@ export default class QuestionsPage extends React.Component {
 
     // create Survey Title
     const surveyData = {
-      title: 'Default Title',
+      title: 'Survey Default Title',
       pages: [
         {
           name: 'page1',
@@ -71,11 +71,9 @@ export default class QuestionsPage extends React.Component {
       newQuestion;
     for (i = 1; i < this.state.id; i += 1) {
       // LEARNING: 'NULL' is 'undefined' in React
-      console.log(`searching for question: ${i}`);
       newQuestion = this.state.questionMap.get(i);
       if (newQuestion !== undefined) {
         surveyData.pages[0].questions.push(newQuestion);
-        console.log(`added question: ${i}`);
       }
     }
     // update surveyjs
@@ -102,7 +100,7 @@ export default class QuestionsPage extends React.Component {
   }
 
   addQuestion = () => {
-    // lEARNING - doesn't actually change state until complete FUNCTION. So:
+    // lEARNING - doesn't actually change state until complete RENDER (all the functions complete in that render round). So:
     // 1. console print statements shouldn't be INSIDE function but outside.
     // 2. if were to split into 2 setState functions, prevstate.ID is still the old ID!
 
@@ -113,10 +111,16 @@ export default class QuestionsPage extends React.Component {
     }));
   }
 
+  updateQuestionType = (id, type) => {
+    // add new object to the Map & increment the id
+    this.setState(prevState => ({
+      questionMap: prevState.questionMap.setIn([id, 'type'], type),
+    }));
+  }
 
   render() {
     const questions = this.state.questionMap.entrySeq().map(([key, questionObject]) => {
-      return <Question id={key} deleteQuestion={this.deleteQuestion} key={key} />;
+      return <Question id={key} deleteQuestion={this.deleteQuestion} updateQuestionType={this.updateQuestionType} key={key} />;
     });
 
     if (this.state.inPreview) {
@@ -141,8 +145,8 @@ export default class QuestionsPage extends React.Component {
   }
 }
 
-// {this.state.questionMap.forEach(this.generateQuestion)}
 
+// {this.state.questionMap.forEach(this.generateQuestion)}
 
 // {this.state.questions.map(x => (<Question id={x} addQuestion={this.addQuestion} deleteQuestion={this.deleteQuestion} key={x} />))}
 

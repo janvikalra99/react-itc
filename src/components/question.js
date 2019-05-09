@@ -10,7 +10,7 @@ export default class Question extends React.Component {
     super(props);
     this.state = {
       id: this.props.id,
-      questionType: 'multiplechoice',
+      questionType: 'radiogroup',
     };
   }
 
@@ -22,12 +22,13 @@ export default class Question extends React.Component {
     this.setState({
       questionType: event.target.value,
     });
+    this.props.updateQuestionType(this.state.id, event.target.value);
   }
 
 
   render() {
     let options;
-    if (this.state.questionType === 'multiplechoice' || this.state.questionType === 'checkbox') {
+    if (this.state.questionType === 'radiogroup' || this.state.questionType === 'checkbox' || this.state.questionType === 'dropdown') {
       options = <Options />;
     } else {
       options = '';
@@ -37,10 +38,10 @@ export default class Question extends React.Component {
       <div className="question">
         <QuestionHeader />
         <select name="questionType" onChange={this.onSelectChange}>
-          <option value="multiplechoice">Multiple Choice</option>
           <option value="checkbox">Checkbox</option>
-          <option value="shortanswer">Short Answer</option>
-          <option value="paragraph">Paragraph</option>
+          <option value="radiogroup">Multiple Choice</option>
+          <option value="comment">Short Answer</option>
+          <option value="dropdown">Lookup</option>
         </select>
         {options}
         <Importance />

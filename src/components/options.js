@@ -1,5 +1,6 @@
 import React from 'react';
 // import { List } from 'immutable';
+import { Map } from 'immutable';
 import Bar from './bar';
 
 
@@ -7,45 +8,79 @@ export default class Options extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: 2,
-      bars: [0, 1, 2],
+      id: 3,
+      choices: Map(),
     };
+  }
+
+  componentWillMount() {
+    // add first item
+    this.setState(prevState => ({
+      choices: prevState.choices.set(0, 'option1'),
+    }));
+    this.setState(prevState => ({
+      choices: prevState.choices.set(1, 'option2'),
+    }));
+    this.setState(prevState => ({
+      choices: prevState.choices.set(2, 'add option'),
+    }));
   }
 
   deleteBar = (id) => {
     // find want index value the ID is at
-    let index = 0;
-    while (this.state.bars[index] !== id) {
-      index += 1;
+    if (this.state.choices.size > 1) {
+      this.setState(prevState => ({
+        choices: prevState.choices.delete(id),
+      }));
     }
-    // make a separate copy of the array
-    const array = [...this.state.bars];
-    // delete that element from the list using it's index location
-    if (array.length > 1) {
-      array.splice(index, 1);
-    }
-    this.setState({ bars: array });
   }
 
-  makeNew = () => {
-    this.setState(prevState => ({ id: prevState.id + 1 }));
-
-    this.setState((prevState) => {
-      const array = prevState.bars;
-      array.push(prevState.id);
-      return { bars: array };
-    });
+  makeNew = (string) => {
+    this.setState(prevState => ({
+      id: prevState.id + 1,
+      choices: prevState.choices.set(prevState.id, 'add option'),
+    }));
   }
 
+  updateChoices = (id, string) => {
+    this.setState(prevState => ({
+      choices: prevState.choices.set(id, string),
+    }));
+    // create an array of choices
+    // const options = ['these', 'are', 'my', 'options'];
+    const options = [];
+
+    let i;
+    for (i = 0; i < this.state.id; i += 1) {
+      const val = this.state.choices.get(i);
+      if (val !== undefined) {
+        options[i] = this.state.choices.get(i);
+      }
+    }
+    this.props.updateOptions(this.props.questionID, options);
+  }
 
   render() {
+    const options = this.state.choices.entrySeq().map(([key, value]) => {
+      return (
+        <Bar id={key}
+          initialText="add option"
+          makeNew={this.makeNew}
+          deleteBar={this.deleteBar}
+          updateChoices={this.updateChoices}
+          key={key}
+        />
+      );
+    });
     return (
       <div>
-        {this.state.bars.map(x => (<Bar id={x} makeNew={this.makeNew} deleteBar={this.deleteBar} key={x} initialText="add option" />))}
+        {options}
       </div>
     );
   }
 }
+// {console.log(`${this.state.choices}`)}
+
 
 // <button type="button" onClick={this.handleDelete}> delete </button>
 

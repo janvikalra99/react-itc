@@ -15,14 +15,11 @@ export default class QuestionsPage extends React.Component {
       title: 'questionTitle',
       isRequired: true,
       colCount: 4,
-      choices: [
-        'choice1',
-        'choice2',
-      ],
+      choices: ['choice1', 'choice2'],
     };
     // set State
     this.state = {
-      id: 2,
+      questionID: 2,
       inPreview: false,
       surveyjs: null,
       questionMap: Map(),
@@ -69,7 +66,7 @@ export default class QuestionsPage extends React.Component {
     // put questionMap objects into surveyData
     let i,
       newQuestion;
-    for (i = 1; i < this.state.id; i += 1) {
+    for (i = 1; i < this.state.questionID; i += 1) {
       // LEARNING: 'NULL' is 'undefined' in React
       newQuestion = this.state.questionMap.get(i);
       if (newQuestion !== undefined) {
@@ -90,11 +87,11 @@ export default class QuestionsPage extends React.Component {
     });
   }
 
-  deleteQuestion = (id) => {
+  deleteQuestion = (questionID) => {
     /* delete item from map */
     if (this.state.questionMap.size > 1) {
       this.setState(prevState => ({
-        questionMap: prevState.questionMap.delete(id),
+        questionMap: prevState.questionMap.delete(questionID),
       }));
     }
   }
@@ -106,21 +103,45 @@ export default class QuestionsPage extends React.Component {
 
     // add new object to the Map & increment the id
     this.setState(prevState => ({
-      questionMap: prevState.questionMap.set(prevState.id, prevState.questionType),
-      id: prevState.id + 1,
+      questionMap: prevState.questionMap.set(prevState.questionID, prevState.questionType),
+      questionID: prevState.questionID + 1,
     }));
   }
 
-  updateQuestionType = (id, type) => {
+  updateQuestionType = (questionID, type) => {
     // add new object to the Map & increment the id
     this.setState(prevState => ({
-      questionMap: prevState.questionMap.setIn([id, 'type'], type),
+      questionMap: prevState.questionMap.setIn([questionID, 'type'], type),
+    }));
+  }
+
+  updateQuestionTitle = (questionID, title) => {
+    // add new object to the Map & increment the id
+    this.setState(prevState => ({
+      questionMap: prevState.questionMap.setIn([questionID, 'title'], title),
+    }));
+  }
+
+  updateOptions = (questionID, options) => {
+    // add new object to the Map & increment the id
+    this.setState(prevState => ({
+      questionMap: prevState.questionMap.setIn([questionID, 'choices'], options),
     }));
   }
 
   render() {
     const questions = this.state.questionMap.entrySeq().map(([key, questionObject]) => {
-      return <Question id={key} deleteQuestion={this.deleteQuestion} updateQuestionType={this.updateQuestionType} key={key} />;
+      return (
+        <Question questionID={key}
+          title={this.state.questionMap.get(key).title}
+          type={this.state.questionMap.get(key).type}
+          deleteQuestion={this.deleteQuestion}
+          updateQuestionType={this.updateQuestionType}
+          updateQuestionTitle={this.updateQuestionTitle}
+          updateOptions={this.updateOptions}
+          key={key}
+        />
+      );
     });
 
     if (this.state.inPreview) {
@@ -135,7 +156,6 @@ export default class QuestionsPage extends React.Component {
     } else {
       return (
         <div>
-          {console.log(`map state: ${this.state.questionMap}`)}
           {questions}
           <button type="button" onClick={this.addQuestion}> Add Question </button>
           <button type="button" onClick={this.startPreview}> Start Preview </button>
@@ -144,10 +164,12 @@ export default class QuestionsPage extends React.Component {
     }
   }
 }
+// {console.log(`map state: ${this.state.questionMap}`)}
 
+// {console.log(`${this.state.questionMap.get(1).choices}`)}
 
 // {this.state.questionMap.forEach(this.generateQuestion)}
 
-// {this.state.questions.map(x => (<Question id={x} addQuestion={this.addQuestion} deleteQuestion={this.deleteQuestion} key={x} />))}
+// {this.state.questions.map(x => (<Question ={x} addQuestion={this.addQuestion} deleteQuestion={this.deleteQuestion} key={x} />))}
 
 // <button type="button" onClick={this.handleClick}>delete</button>

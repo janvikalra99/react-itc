@@ -12,6 +12,7 @@ export default class Bar extends React.Component {
 
   onInputChange = (event) => {
     this.setState({ text: event.target.value });
+    this.props.updateChoices(this.state.id, event.target.value);
   }
 
   onKeyDown = (event) => {
